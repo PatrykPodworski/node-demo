@@ -1,4 +1,6 @@
-const loggerMiddleware = (req: any, _res: any, next: () => void) => {
+import { RequestHandler } from "express";
+
+const loggerMiddleware: RequestHandler = (req, _res, next) => {
   console.log(
     req.headers.origin,
     req.method,

@@ -4,7 +4,8 @@ import { appRoot } from "./env";
 import corsMiddleware from "./middleware/corsMiddleware";
 import { errorMiddleware } from "./middleware/errorMiddleware";
 import loggerMiddleware from "./middleware/loggerMiddleware";
-import notFoundRouter from "./routes/notFound";
+import authRouter from "./components/auth/router";
+import notFoundRouter from "./components/notFound/router";
 
 const app = express();
 const PORT = process.env["PORT"] || 3001;
@@ -19,6 +20,8 @@ app.use(express.static(path.join(appRoot, "public")));
 app.get("/", (_req, res) => {
   res.sendFile(path.join(appRoot, "views", "index.html"));
 });
+
+app.use(authRouter);
 
 app.use(notFoundRouter);
 app.use(errorMiddleware);
