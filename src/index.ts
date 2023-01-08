@@ -1,6 +1,6 @@
 import express from "express";
 import path from "path";
-import { appRoot } from "./env";
+import env from "./env";
 import corsMiddleware from "./middleware/corsMiddleware";
 import { errorMiddleware } from "./middleware/errorMiddleware";
 import loggerMiddleware from "./middleware/loggerMiddleware";
@@ -14,7 +14,7 @@ app.use(loggerMiddleware);
 app.use(corsMiddleware());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-app.use(express.static(path.join(appRoot, "public")));
+app.use(express.static(path.join(env.appRoot, "public")));
 
 app.use(authRouter);
 app.use(notFoundRouter);

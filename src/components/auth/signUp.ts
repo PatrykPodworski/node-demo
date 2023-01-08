@@ -1,7 +1,7 @@
 import { hash } from "bcrypt";
 import { randomUUID } from "crypto";
 import RequestHandler from "../common/RequestHandler";
-import { mockData } from "./user";
+import { setUsers, users } from "./user";
 
 const signUp: RequestHandler<Request, Response> = async (req, res) => {
   const { name, password } = req.body;
@@ -9,7 +9,7 @@ const signUp: RequestHandler<Request, Response> = async (req, res) => {
     return res.status(400).json({ error: "Name and password are required." });
   }
 
-  if (mockData.find((x) => x.name === name)) {
+  if (users.find((x) => x.name === name)) {
     return res
       .status(400)
       .json({ error: `User with name ${name} already exists.` });
@@ -17,7 +17,7 @@ const signUp: RequestHandler<Request, Response> = async (req, res) => {
 
   const id = randomUUID();
   const passwordHash = await hash(password, 10);
-  mockData.push({ id, name, passwordHash });
+  setUsers([...users, { id, name, passwordHash }]);
 
   return res.status(201).json({ id });
 };

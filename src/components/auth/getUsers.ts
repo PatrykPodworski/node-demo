@@ -1,8 +1,8 @@
 import RequestHandler from "../common/RequestHandler";
-import User, { mockData } from "./user";
+import User, { users } from "./user";
 
 const getUsers: RequestHandler<undefined, Response> = (_req, res) => {
-  res.status(200).json(mockData);
+  res.status(200).json(users);
 };
 
 type Response = User[];
