@@ -2,7 +2,7 @@ import { compare } from "bcrypt";
 import { sign } from "jsonwebtoken";
 import env from "../../env";
 import RequestHandler from "../common/RequestHandler";
-import { setUsers, users } from "./user";
+import { setUsers, users } from "./User";
 
 const signIn: RequestHandler<Request, Response> = async (req, res) => {
   const { name, password } = req.body;
