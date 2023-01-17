@@ -1,5 +1,5 @@
 import RequestHandler from "../common/RequestHandler";
-import User, { users } from "./User";
+import User, { users } from "./common/User";
 
 const getUsers: RequestHandler<undefined, Response> = (_req, res) => {
   res.status(200).json(users);

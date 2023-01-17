@@ -1,10 +1,7 @@
-import {
-  verify,
-  JwtPayload as DefaultJwtPayload,
-  VerifyCallback,
-} from "jsonwebtoken";
+import { verify, VerifyCallback } from "jsonwebtoken";
 import RequestHandler from "../components/common/RequestHandler";
 import env from "../env";
+import JwtPayload from "../components/auth/common/JwtPayload";
 
 export const jwtMiddleware: AuthenticatedRequestHandler = (req, res, next) => {
   const header = req.headers["authorization"];
@@ -31,8 +28,6 @@ export const jwtMiddleware: AuthenticatedRequestHandler = (req, res, next) => {
 
   return;
 };
-
-type JwtPayload = DefaultJwtPayload | { username: string };
 
 type AuthenticatedRequest = {
   user: User;

@@ -1,7 +1,7 @@
 import { hash } from "bcrypt";
 import { randomUUID } from "crypto";
 import RequestHandler from "../common/RequestHandler";
-import { setUsers, users } from "./User";
+import { setUsers, users } from "./common/User";
 
 const signUp: RequestHandler<Request, Response> = async (req, res) => {
   const { name, password } = req.body;

@@ -1,8 +1,9 @@
 import { compare } from "bcrypt";
 import { sign } from "jsonwebtoken";
-import env from "../../env";
+import env from "src/env";
 import RequestHandler from "../common/RequestHandler";
-import { setUsers, users } from "./User";
+import generateAccessToken from "./common/generateAccessToken";
+import { setUsers, users } from "./common/User";
 
 const signIn: RequestHandler<Request, Response> = async (req, res) => {
   const { name, password } = req.body;
@@ -36,13 +37,7 @@ const signIn: RequestHandler<Request, Response> = async (req, res) => {
 };
 
 const generateTokens = (name: string) => {
-  const accessToken = sign(
-    {
-      username: name,
-    },
-    env.accessTokenSecret,
-    { expiresIn: env.accessTokenExpirationTime }
-  );
+  const accessToken = generateAccessToken(name);
   const refreshToken = sign(
     {
       username: name,
