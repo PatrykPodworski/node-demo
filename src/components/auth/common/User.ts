@@ -2,7 +2,7 @@ type User = {
   id: string;
   name: string;
   passwordHash: string;
-  refreshToken?: string;
+  refreshToken?: string | undefined;
 };
 
 export let users: User[] = [];

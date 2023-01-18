@@ -23,9 +23,7 @@ const signIn: RequestHandler<Request, Response> = async (req, res) => {
 
   const { accessToken, refreshToken } = generateTokens(user.name);
 
-  setUsers(
-    users.map((x) => (x.id === user.id ? { ...x, refreshToken } : user))
-  );
+  setUsers(users.map((x) => (x.id === user.id ? { ...x, refreshToken } : x)));
 
   return res
     .cookie("jwt", refreshToken, {
