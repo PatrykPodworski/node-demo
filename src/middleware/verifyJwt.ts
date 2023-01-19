@@ -3,7 +3,7 @@ import RequestHandler from "../components/common/RequestHandler";
 import env from "../env";
 import JwtPayload from "../components/auth/common/JwtPayload";
 
-export const jwtMiddleware: AuthenticatedRequestHandler = (req, res, next) => {
+export const verifyJwt: AuthenticatedRequestHandler = (req, res, next) => {
   const header = req.headers["authorization"];
   const token = header?.split(" ")[1];
 

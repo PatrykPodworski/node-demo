@@ -1,11 +1,10 @@
 import cors from "cors";
+import allowedOrigins from "./common/allowedOrigins";
 
-const corsMiddleware = () => {
-  const whitelist = ["http://localhost:3001", "https://www.google.com"];
-
+const configureCors = () => {
   return cors({
     origin: (origin, callback) => {
-      if (!origin || whitelist.indexOf(origin) !== -1) {
+      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
         callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS"));
@@ -15,4 +14,4 @@ const corsMiddleware = () => {
   });
 };
 
-export default corsMiddleware;
+export default configureCors;

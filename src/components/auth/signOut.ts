@@ -21,7 +21,7 @@ const signOut: RequestHandler = (req, res) => {
 };
 
 const clearCookie = (res: Response) => {
-  res.clearCookie("jwt", { httpOnly: true });
+  res.clearCookie("jwt", { httpOnly: true, sameSite: "none", secure: true });
   return res.sendStatus(200);
 };
 

@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 
-const loggerMiddleware: RequestHandler = (req, _res, next) => {
+const logger: RequestHandler = (req, _res, next) => {
   console.log(
     req.headers.origin,
     req.method,
@@ -10,4 +10,4 @@ const loggerMiddleware: RequestHandler = (req, _res, next) => {
   next();
 };
 
-export default loggerMiddleware;
+export default logger;

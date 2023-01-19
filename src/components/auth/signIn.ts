@@ -28,6 +28,8 @@ const signIn: RequestHandler<Request, Response> = async (req, res) => {
   return res
     .cookie("jwt", refreshToken, {
       httpOnly: true,
+      sameSite: "none",
+      secure: true,
       maxAge: env.refreshTokenExpirationTime * 1000,
     })
     .status(200)
