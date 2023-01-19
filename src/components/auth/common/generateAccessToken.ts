@@ -1,10 +1,12 @@
 import { sign } from "jsonwebtoken";
 import env from "src/env";
+import User from "../models/User";
 
-const generateAccessToken = (name: string) => {
+const generateAccessToken = (user: User) => {
   const accessToken = sign(
     {
-      username: name,
+      username: user.name,
+      roles: user.roles,
     },
     env.accessTokenSecret,
     { expiresIn: env.accessTokenExpirationTime }

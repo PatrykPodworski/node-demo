@@ -2,9 +2,10 @@ import { verify, VerifyCallback } from "jsonwebtoken";
 import RequestHandler from "../components/common/RequestHandler";
 import env from "../env";
 import JwtPayload from "../components/auth/common/JwtPayload";
+import User from "src/components/auth/models/User";
 
 export const verifyJwt: AuthenticatedRequestHandler = (req, res, next) => {
-  const header = req.headers["authorization"];
+  const header = req.headers.authorization;
   const token = header?.split(" ")[1];
 
   if (!token) {
@@ -20,7 +21,10 @@ export const verifyJwt: AuthenticatedRequestHandler = (req, res, next) => {
       return res.sendStatus(500);
     }
 
-    req.body = { ...req.body, user: { name: decoded.username } };
+    req.body = {
+      ...req.body,
+      user: { name: decoded.username, roles: decoded.roles },
+    };
     return next();
   };
 
@@ -30,14 +34,10 @@ export const verifyJwt: AuthenticatedRequestHandler = (req, res, next) => {
 };
 
 type AuthenticatedRequest = {
-  user: User;
+  user: Pick<User, "name" | "roles">;
 };
 
-type User = {
-  name: string;
-};
-
-type AuthenticatedRequestHandler<
+export type AuthenticatedRequestHandler<
   Request = undefined,
   Response = undefined
 > = RequestHandler<Request | AuthenticatedRequest, Response>;

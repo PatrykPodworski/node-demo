@@ -3,7 +3,7 @@ import { sign } from "jsonwebtoken";
 import env from "src/env";
 import RequestHandler from "../common/RequestHandler";
 import generateAccessToken from "./common/generateAccessToken";
-import { setUsers, users } from "./common/User";
+import User, { setUsers, users } from "./models/User";
 
 const signIn: RequestHandler<Request, Response> = async (req, res) => {
   const { name, password } = req.body;
@@ -21,7 +21,7 @@ const signIn: RequestHandler<Request, Response> = async (req, res) => {
     return res.status(400).json({ error: "Sign in failed." });
   }
 
-  const { accessToken, refreshToken } = generateTokens(user.name);
+  const { accessToken, refreshToken } = generateTokens(user);
 
   setUsers(users.map((x) => (x.id === user.id ? { ...x, refreshToken } : x)));
 
@@ -36,11 +36,11 @@ const signIn: RequestHandler<Request, Response> = async (req, res) => {
     .json({ accessToken });
 };
 
-const generateTokens = (name: string) => {
-  const accessToken = generateAccessToken(name);
+const generateTokens = (user: User) => {
+  const accessToken = generateAccessToken(user);
   const refreshToken = sign(
     {
-      username: name,
+      username: user.name,
     },
     env.refreshTokenSecret,
     { expiresIn: env.refreshTokenExpirationTime }

@@ -1,6 +1,6 @@
 import { Response } from "express";
 import RequestHandler from "../common/RequestHandler";
-import { setUsers, users } from "./common/User";
+import { setUsers, users } from "./models/User";
 
 const signOut: RequestHandler = (req, res) => {
   const refreshToken: string = req.cookies["jwt"];

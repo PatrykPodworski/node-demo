@@ -3,7 +3,7 @@ import env from "src/env";
 import RequestHandler from "../common/RequestHandler";
 import generateAccessToken from "./common/generateAccessToken";
 import JwtPayload from "./common/JwtPayload";
-import { users } from "./common/User";
+import { users } from "./models/User";
 
 const refreshToken: RequestHandler<undefined, Response> = (req, res) => {
   const refreshToken: string = req.cookies["jwt"];
@@ -29,7 +29,7 @@ const refreshToken: RequestHandler<undefined, Response> = (req, res) => {
       return res.sendStatus(403);
     }
 
-    const accessToken = generateAccessToken(user.name);
+    const accessToken = generateAccessToken(user);
 
     return res.json({ accessToken });
   };
