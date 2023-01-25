@@ -1,22 +1,21 @@
 import { Response } from "express";
-import RequestHandler from "../common/RequestHandler";
-import { setUsers, users } from "./models/User";
+import RequestHandler from "src/components/common/RequestHandler";
+import User from "./data/User";
 
-const signOut: RequestHandler = (req, res) => {
+const signOut: RequestHandler = async (req, res) => {
   const refreshToken: string = req.cookies["jwt"];
   if (!refreshToken || typeof refreshToken !== "string") {
     return res.sendStatus(200);
   }
 
-  const user = users.find((x) => x.refreshToken === refreshToken);
+  const user = await User.findOne({ refreshToken: refreshToken }).exec();
+
   if (!user) {
     return clearCookie(res);
   }
 
-  const updatedUser = { ...user, refreshToken: undefined };
-  const filteredUsers = users.filter((x) => x.id !== user.id);
-  setUsers([...filteredUsers, updatedUser]);
-
+  user.refreshToken = undefined;
+  await user.save();
   return clearCookie(res);
 };
 

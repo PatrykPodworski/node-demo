@@ -12,6 +12,8 @@ const env = () => {
 
     refreshTokenSecret: process.env?.["REFRESH_TOKEN_SECRET"] ?? "",
     refreshTokenExpirationTime: 24 * 60 * 60,
+
+    connectionString: process.env?.["CONNECTION_STRING"] ?? "",
   };
 };
 

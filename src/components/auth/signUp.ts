@@ -1,7 +1,6 @@
 import { hash } from "bcrypt";
-import { randomUUID } from "crypto";
 import RequestHandler from "../common/RequestHandler";
-import { setUsers, users } from "./models/User";
+import User from "src/components/auth/data/User";
 
 const signUp: RequestHandler<Request, Response> = async (req, res) => {
   const { name, password } = req.body;
@@ -9,17 +8,21 @@ const signUp: RequestHandler<Request, Response> = async (req, res) => {
     return res.status(400).json({ error: "Name and password are required." });
   }
 
-  if (users.find((x) => x.name === name)) {
+  const duplicate = await User.findOne({ name: name }).lean();
+  if (duplicate) {
     return res
       .status(400)
       .json({ error: `User with name ${name} already exists.` });
   }
 
-  const id = randomUUID();
   const passwordHash = await hash(password, 10);
-  setUsers([...users, { id, name, passwordHash, roles: ["User"] }]);
 
-  return res.status(201).json({ id });
+  const result = await User.create({
+    name: name,
+    passwordHash: passwordHash,
+  });
+
+  return res.status(201).json({ id: result._id.toString() });
 };
 
 type Request = {

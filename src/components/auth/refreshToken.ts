@@ -1,17 +1,19 @@
 import { verify, VerifyCallback } from "jsonwebtoken";
 import env from "src/env";
-import RequestHandler from "../common/RequestHandler";
+import RequestHandler from "src/components/common/RequestHandler";
 import generateAccessToken from "./common/generateAccessToken";
 import JwtPayload from "./common/JwtPayload";
-import { users } from "./models/User";
+import User from "./data/User";
+import { isRole } from "./models/Role";
 
-const refreshToken: RequestHandler<undefined, Response> = (req, res) => {
+const refreshToken: RequestHandler<undefined, Response> = async (req, res) => {
   const refreshToken: string = req.cookies["jwt"];
   if (!refreshToken || typeof refreshToken !== "string") {
     return res.sendStatus(401);
   }
 
-  const user = users.find((x) => x.refreshToken === refreshToken);
+  const user = await User.findOne({ refreshToken: refreshToken }).lean();
+
   if (!user) {
     return res.sendStatus(403);
   }
@@ -29,7 +31,10 @@ const refreshToken: RequestHandler<undefined, Response> = (req, res) => {
       return res.sendStatus(403);
     }
 
-    const accessToken = generateAccessToken(user);
+    const accessToken = generateAccessToken({
+      roles: user.roles.filter(isRole),
+      username: user.name,
+    });
 
     return res.json({ accessToken });
   };

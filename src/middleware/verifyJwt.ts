@@ -1,8 +1,8 @@
 import { verify, VerifyCallback } from "jsonwebtoken";
-import RequestHandler from "../components/common/RequestHandler";
-import env from "../env";
-import JwtPayload from "../components/auth/common/JwtPayload";
-import User from "src/components/auth/models/User";
+import RequestHandler from "src/components/common/RequestHandler";
+import env from "src/env";
+import JwtPayload from "src/components/auth/common/JwtPayload";
+import ApiUser from "src/components/auth/models/ApiUser";
 
 export const verifyJwt: AuthenticatedRequestHandler = (req, res, next) => {
   const header = req.headers.authorization;
@@ -34,7 +34,7 @@ export const verifyJwt: AuthenticatedRequestHandler = (req, res, next) => {
 };
 
 type AuthenticatedRequest = {
-  user: Pick<User, "name" | "roles">;
+  user: Pick<ApiUser, "name" | "roles">;
 };
 
 export type AuthenticatedRequestHandler<

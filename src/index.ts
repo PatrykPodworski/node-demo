@@ -10,9 +10,13 @@ import cookieParser from "cookie-parser";
 import { verifyJwt } from "./middleware/verifyJwt";
 import mealsRouter from "./components/meals/router";
 import credentials from "./middleware/credentials";
+import { connection } from "mongoose";
+import configureDatabase from "./middleware/configureDatabase";
 
 const app = express();
 const PORT = process.env["PORT"] || 3001;
+
+configureDatabase();
 
 app.use(logger);
 app.use(credentials);
@@ -34,6 +38,8 @@ app.use(notFoundRouter);
 
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+connection.once("open", () => {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
 });

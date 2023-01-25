@@ -1,11 +1,11 @@
 import { sign } from "jsonwebtoken";
 import env from "src/env";
-import User from "../models/User";
+import { TokenUser } from "./JwtPayload";
 
-const generateAccessToken = (user: User) => {
+const generateAccessToken = (user: TokenUser) => {
   const accessToken = sign(
     {
-      username: user.name,
+      username: user.username,
       roles: user.roles,
     },
     env.accessTokenSecret,

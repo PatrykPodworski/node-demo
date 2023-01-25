@@ -1,9 +1,11 @@
 import { compare } from "bcrypt";
 import { sign } from "jsonwebtoken";
 import env from "src/env";
-import RequestHandler from "../common/RequestHandler";
+import RequestHandler from "src/components/common/RequestHandler";
 import generateAccessToken from "./common/generateAccessToken";
-import User, { setUsers, users } from "./models/User";
+import { TokenUser } from "./common/JwtPayload";
+import { isRole } from "./models/Role";
+import User from "./data/User";
 
 const signIn: RequestHandler<Request, Response> = async (req, res) => {
   const { name, password } = req.body;
@@ -11,7 +13,7 @@ const signIn: RequestHandler<Request, Response> = async (req, res) => {
     return res.status(400).json({ error: "Name and password are required." });
   }
 
-  const user = users.find((x) => x.name === name);
+  const user = await User.findOne({ name: name });
   if (!user) {
     return res.status(400).json({ error: "Sign in failed." });
   }
@@ -21,9 +23,13 @@ const signIn: RequestHandler<Request, Response> = async (req, res) => {
     return res.status(400).json({ error: "Sign in failed." });
   }
 
-  const { accessToken, refreshToken } = generateTokens(user);
+  const { accessToken, refreshToken } = generateTokens({
+    username: user.name,
+    roles: user.roles.filter(isRole),
+  });
 
-  setUsers(users.map((x) => (x.id === user.id ? { ...x, refreshToken } : x)));
+  user.refreshToken = refreshToken;
+  await user.save();
 
   return res
     .cookie("jwt", refreshToken, {
@@ -36,11 +42,11 @@ const signIn: RequestHandler<Request, Response> = async (req, res) => {
     .json({ accessToken });
 };
 
-const generateTokens = (user: User) => {
+const generateTokens = (user: TokenUser) => {
   const accessToken = generateAccessToken(user);
   const refreshToken = sign(
     {
-      username: user.name,
+      username: user.username,
     },
     env.refreshTokenSecret,
     { expiresIn: env.refreshTokenExpirationTime }
