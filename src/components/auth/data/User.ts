@@ -24,11 +24,11 @@ const userSchema = new Schema<UserSchema>({
   refreshToken: String,
   roles: {
     type: [String],
-    default: ["User"],
+    default: ["User"], // TODO enum roles
   },
   createdAt: { type: Date, default: Date.now },
 });
 
-const UserModel = model("User", userSchema);
+const User = model("User", userSchema);
 
-export default UserModel;
+export default User;

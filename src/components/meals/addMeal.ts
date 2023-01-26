@@ -1,25 +1,22 @@
-import { randomUUID } from "crypto";
 import RequestHandler from "../common/RequestHandler";
-import Meal, { meals, setMeals } from "./Meal";
+import Meal from "./data/Meal";
+import ApiMeal from "./models/ApiMeal";
+import { toApiMeal } from "./models/mappers";
 
-const addMeal: RequestHandler<Request, Response> = (req, res) => {
-  const name = req.body.name;
-  if (!name) {
+const addMeal: RequestHandler<Request, Response> = async (req, res) => {
+  const { name, ingredients } = req.body;
+
+  if (!name || !ingredients) {
     return res.sendStatus(400);
   }
 
-  const meal = {
-    id: randomUUID(),
-    name,
-  };
+  const meal = await Meal.create({ name: name, ingredients: ingredients });
 
-  setMeals([...meals, meal]);
-
-  return res.status(201).json(meal);
+  return res.status(201).json(toApiMeal(meal));
 };
 
-type Request = Omit<Meal, "id">;
+type Request = Omit<ApiMeal, "id">;
 
-type Response = Meal;
+type Response = ApiMeal;
 
 export default addMeal;
