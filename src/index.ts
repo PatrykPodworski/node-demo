@@ -14,7 +14,7 @@ import { connection } from "mongoose";
 import configureDatabase from "./middleware/configureDatabase";
 
 const app = express();
-const PORT = process.env["PORT"] || 3001;
+const PORT = process.env["PORT"] || 8080;
 
 configureDatabase();
 
